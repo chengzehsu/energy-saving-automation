@@ -1,0 +1,13 @@
+name: energy-saving-automation
+services:
+  energy-monitor:
+    source:
+      image: node:18-alpine
+    command: npm start
+    env:
+      - NOTION_TOKEN=${NOTION_TOKEN}
+      - NOTION_DATABASE_ID=${NOTION_DATABASE_ID}
+      - TARGET_URL=${TARGET_URL}
+    schedule:
+      - cron: "0 */6 * * *"
+        command: npm start
