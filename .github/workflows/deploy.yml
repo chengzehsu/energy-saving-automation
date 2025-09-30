@@ -29,10 +29,18 @@ jobs:
           node -c scraper.js
           echo "✅ Syntax check passed"
           
+      - name: Install Zeabur CLI
+        run: npm install -g zeabur
+        
       - name: Deploy to Zeabur
-        uses: zeabur/deploy-action@v1
-        with:
-          username: ${{ secrets.ZEABUR_USERNAME }}
-          password: ${{ secrets.ZEABUR_PASSWORD }}
-          project-name: energy-saving-automation
-          service-name: energy-monitor
+        env:
+          ZEABUR_TOKEN: ${{ secrets.ZEABUR_TOKEN }}
+        run: |
+          if [ -n "$ZEABUR_TOKEN" ]; then
+            echo "Using token authentication"
+            zeabur auth login --token $ZEABUR_TOKEN
+          else
+            echo "Using username/password authentication"
+            zeabur auth login --username ${{ secrets.ZEABUR_USERNAME }} --password ${{ secrets.ZEABUR_PASSWORD }}
+          fi
+          zeabur deploy
