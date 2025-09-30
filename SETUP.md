@@ -89,7 +89,35 @@ npm start
 - 資料提取結果
 - Notion 更新狀態
 
-## 自動化執行
+## Zeabur 部署
+
+### 自動部署設置
+1. **GitHub Secrets 設置**
+   - 參考 `GITHUB_SECRETS_SETUP.md` 設置必要的 secrets
+   - 設置 `ZEABUR_TOKEN` 或 `ZEABUR_USERNAME`/`ZEABUR_PASSWORD`
+
+2. **Zeabur 環境變數**
+   - 在 Zeabur 後台設置以下環境變數：
+     - `NOTION_TOKEN`: 你的 Notion Integration Token
+     - `NOTION_DATABASE_ID`: 你的 Notion 資料庫 ID  
+     - `TARGET_URL`: `http://192.168.50.143:8502/`
+
+3. **自動部署**
+   - 每次推送到 `main` 分支會自動觸發部署
+   - GitHub Actions 會執行基本檢查並部署到 Zeabur
+   - 部署後會每 6 小時自動執行一次監控
+
+### 手動部署
+如果需要手動部署：
+```bash
+# 使用 Zeabur CLI
+zeabur deploy
+
+# 或推送代碼觸發自動部署
+git push origin main
+```
+
+## 本地開發自動化執行
 
 您可以使用 cron（Linux/Mac）或任務排程器（Windows）來定期執行這個腳本：
 
@@ -101,6 +129,17 @@ npm start
 # 每天早上 9 點執行
 0 9 * * * cd /path/to/energy-saving-automation && npm start
 ```
+
+## 監控和日誌
+
+### Zeabur 日誌查看
+- 在 Zeabur 後台可以查看應用程式日誌
+- 監控定時任務執行狀態
+- 檢查 Notion API 連接狀態
+
+### GitHub Actions 狀態
+- 在 GitHub 倉庫的 "Actions" 標籤查看部署狀態
+- 每次推送都會觸發 CI/CD 流程
 
 ## 客製化
 

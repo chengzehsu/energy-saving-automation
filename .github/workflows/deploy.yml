@@ -1,0 +1,38 @@
+name: Deploy to Zeabur
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run basic checks
+        run: |
+          echo "Running basic syntax check..."
+          node -c index.js
+          node -c scraper.js
+          echo "✅ Syntax check passed"
+          
+      - name: Deploy to Zeabur
+        uses: zeabur/deploy-action@v1
+        with:
+          username: ${{ secrets.ZEABUR_USERNAME }}
+          password: ${{ secrets.ZEABUR_PASSWORD }}
+          project-name: energy-saving-automation
+          service-name: energy-monitor
